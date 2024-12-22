@@ -204,8 +204,6 @@ for y, row in enumerate(grid):
             for direction in directions:
                 search((y, x), direction, 0)
 
-
-
 print(found["words"])
 
 
