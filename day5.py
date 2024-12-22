@@ -1370,7 +1370,6 @@ raw_text_updates = """
 """
 
 
-# Convert to list of tuples
 page_orders_input = []
 updates_input = []
 page_orders_set = defaultdict(set)
