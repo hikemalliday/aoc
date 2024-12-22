@@ -141,7 +141,6 @@ XMSAMXAAMAXMXSXMMSAMXASXSXMAXSAMXAASAMXAMSAMXMSMMAAMSASASAAXMMSMMAMSAAAXMAMSAMXA
 AXMXMSSSSMSMXMASAMXSMMMXAXMAMSASXSMMMSAXMSXXAXMASXSXSMMMSMSMXAMXSXAMSSXMSXSSXXSSMMMSAMXSXMSAAXSASMSMXSASMSXMASMSSMXMAMMAMXASASXMASAXSAMXXMAS
 """
 
-# First we need to convert this to a grid
 split_on_new_line = raw_string.strip().split("\n")
 
 grid = []
@@ -151,62 +150,57 @@ for row in split_on_new_line:
         new_row.append(char)
     grid.append(new_row)
 
+found = {"xmas": 0}
 
-word = "XMAS"
-found = {"words": 0}
+def find_xmas(y, x):
+    upper_left = ""
+    upper_right = ""
+    down_left = ""
+    down_right = ""
+    counter = 0
+ 
 
-def search(coordinates, direction, curr_char_idx):
-    
-    if curr_char_idx == len(word) - 1:
-        found["words"] += 1
-        return
-    
-    next_letter = word[curr_char_idx + 1]
-     
-    if coordinates is not None:
-        y = coordinates[0]
-        x = coordinates[1]
-    elif word[curr_char_idx] == "X":
-        y = 0
-        x = 0
+    # upper_left
+    if (y - 1) >= 0 and (x - 1) >= 0:
+        upper_left = grid[y - 1][x - 1]
 
-    if direction == "up_left" and (y - 1) >= 0 and (x - 1) >= 0 and grid[y - 1][x - 1] == next_letter:
-        return search((y - 1, x - 1), "up_left", curr_char_idx + 1)
+    # upper_right
+    if (y - 1) >= 0 and (x + 1) < len(grid[0]):
+        upper_right = grid[y - 1][x + 1]
 
-    if direction == "up_right" and (y - 1) >= 0 and (x + 1) < len(grid[0]) and grid[y - 1][x + 1] == next_letter:
-        return search((y - 1, x + 1), "up_right", curr_char_idx + 1)
+    # down_right
+    if (y + 1) < len(grid) and (x + 1) < len(grid[0]):
+        down_right = grid[y + 1][x + 1]
 
-    if direction == "down_right" and (y + 1) < len(grid) and (x + 1) < len(grid[0]) and grid[y + 1][x + 1] == next_letter:
-        return search((y + 1, x + 1), "down_right", curr_char_idx + 1)
+    # down_left
+    if (y + 1) < len(grid) and (x - 1) >= 0:
+        down_left = grid[y + 1][x - 1]
 
-    if direction == "down_left" and (y + 1) < len(grid) and (x - 1) >= 0 and grid[y + 1][x - 1] == next_letter:
-        return search((y + 1, x - 1), "down_left", curr_char_idx + 1)
+    if upper_left == "M" and down_right == "S":
+        counter += 1
 
-    if direction == "left" and (x - 1) >= 0 and grid[y][x - 1] == next_letter:
-        return search((y, x - 1), "left", curr_char_idx + 1)
+    if upper_left == "S" and down_right == "M":
+        counter += 1
 
-    if direction == "right" and (x + 1) < len(grid[0]) and grid[y][x + 1] == next_letter:
-        return search((y, x + 1), "right", curr_char_idx + 1)
+    if upper_right == "M" and down_left == "S":
+        counter += 1
 
-    if direction == "up" and (y - 1) >= 0 and grid[y - 1][x] == next_letter:
-        return search((y - 1, x), "up", curr_char_idx + 1)
+    if upper_right == "S" and down_left == "M":
+        counter += 1
 
-    if direction == "down" and (y + 1) < len(grid) and grid[y + 1][x] == next_letter:
-        return search((y + 1, x), "down", curr_char_idx + 1)
-    
-    
+    if counter == 2:
+        found["xmas"] += 1
 
-directions = ["up_left", "up_right", "down_left", "down_right", "left", "right", "up", "down"]
 
 for y, row in enumerate(grid):
     for x, letter in enumerate(row):
-        if letter == "X":
-            for direction in directions:
-                search((y, x), direction, 0)
+        if letter == "A":
+            find_xmas(y, x)
 
-
-
-print(found["words"])
-
+print(found["xmas"])
 
     
+    
+
+
+
