@@ -1374,6 +1374,7 @@ page_orders_input = []
 updates_input = []
 page_orders_set = defaultdict(set)
 valid_updates_idxs = []
+invalid_update_idxs = []
 
 
 # create 'page_orders_input'
@@ -1395,38 +1396,59 @@ for x, update in enumerate(updates_input):
     for i, page in enumerate(update):
         remaining = update[(i + 1):]
         if not set(remaining).issubset(page_orders_set[page]):
+            invalid_update_idxs.append(x)
             break
         if i == len(update) - 1:
             valid_updates_idxs.append(x)
 
-# Sum middle nums from valid update rows
-sum = 0
 
-for i in valid_updates_idxs:
-    valid_row = updates_input[i]
-    middle_num = valid_row[len(valid_row) // 2]
+fixed_rows = []
+
+# So basically here, if a page num is invalid, move it to the front of the list and restart loop
+# Do this until no changes are made, then exit the loop
+for i in invalid_update_idxs:
+    invalid_row = updates_input[i]
+    while True:
+        changes_made = False
+        for j in range(len(invalid_row)):
+            page = invalid_row[j]
+            remaining = invalid_row[(j + 1):]
+            difference = list(set(remaining) - page_orders_set[page])
+
+            if len(difference) != 0:
+                invalid_row.remove(difference[0])
+                invalid_row.insert(0, difference[0])
+                changes_made = True
+                break
+
+        if not changes_made:
+            fixed_rows.append(invalid_row)
+            break
+
+sum = 0
+for row in fixed_rows:
+    middle_num = row[len(row) // 2]
     sum += int(middle_num)
 
 print(sum)
 
-# Create invalid rows
+
+
+
+
+        
 
 
 
 
 
+# Sum middle nums from valid update rows
+# sum = 0
 
+# for i in valid_updates_idxs:
+#     valid_row = updates_input[i]
+#     middle_num = valid_row[len(valid_row) // 2]
+#     sum += int(middle_num)
 
-
-
-
-
-
-
-
-
-
-
-
-
+# print(sum)
 
