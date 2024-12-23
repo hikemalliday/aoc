@@ -1409,8 +1409,6 @@ for i in valid_updates_idxs:
 
 print(sum)
 
-# Create invalid rows
-
 
 
 
